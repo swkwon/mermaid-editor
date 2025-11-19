@@ -81,7 +81,7 @@ h1 {
     border-right: 1px solid #ddd;
     text-align: right;
     padding: 10px 5px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     font-size: 14px;
     line-height: 1.5;
     color: #999;
@@ -96,7 +96,7 @@ textarea {
     border: none; /* Border handled by wrapper */
     border-radius: 0;
     padding: 10px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     font-size: 14px;
     line-height: 1.5;
     flex-grow: 1;
