@@ -3,6 +3,7 @@ const CONFIG = {
     SPLIT_SIZES_KEY: 'split-sizes',
     MERMAID_CODE_KEY: 'mermaid-code',
     BACKGROUND_PATTERN_KEY: 'background-pattern',
+    DARK_MODE_KEY: 'dark-mode',
     AUTOSAVE_TTL: 60 * 60 * 1000, // 1 hour
     DEBOUNCE_DELAY: 300,
     TOAST_DURATION: 3000,
@@ -219,9 +220,11 @@ const convertSvgToImage = (svgElement, bbox, format, onSuccess, onError) => {
                 return;
             }
             
-            ctx.fillStyle = 'white';
+            // Use dark background if dark mode is enabled
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            ctx.fillStyle = isDarkMode ? '#1e1e2e' : 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            console.log('White background filled');
+            console.log(`${isDarkMode ? 'Dark' : 'White'} background filled`);
             
             console.log('Drawing image at:', CONFIG.PADDING, CONFIG.PADDING, 'with size:', width, height);
             ctx.drawImage(img, CONFIG.PADDING, CONFIG.PADDING, width, height);
@@ -306,6 +309,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedSizes = localStorage.getItem(CONFIG.SPLIT_SIZES_KEY);
     const initialSizes = savedSizes ? JSON.parse(savedSizes) : CONFIG.DEFAULT_SPLIT_SIZES;
 
+    // Initialize variables first
+    let currentBackground = localStorage.getItem(CONFIG.BACKGROUND_PATTERN_KEY) || 'dot';
+    let currentTheme = localStorage.getItem('editorTheme') || 'material-darker';
+    let isDarkMode = localStorage.getItem(CONFIG.DARK_MODE_KEY) === 'true';
+
     // Initialize Split.js
     Split(['#editor-pane', '#diagram-pane'], {
         sizes: initialSizes,
@@ -321,6 +329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         startOnLoad: false,
         securityLevel: 'strict',
         suppressErrors: true,
+        theme: isDarkMode ? 'dark' : 'default',
         flowchart: { 
             htmlLabels: false,
             useMaxWidth: false
@@ -339,14 +348,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exportMenu = document.getElementById('export-menu');
     const toggleBackgroundBtn = document.getElementById('toggle-background-btn');
     const copyImageBtn = document.getElementById('copy-image-btn');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
     const mermaidInput = document.getElementById('mermaid-input');
     const mermaidDiagram = document.getElementById('mermaid-diagram');
     const toast = document.getElementById('toast-notification');
     const sampleSelector = document.getElementById('sample-selector');
     const themeSelector = document.getElementById('theme-selector');
     let panZoomInstance = null;
-    let currentBackground = localStorage.getItem(CONFIG.BACKGROUND_PATTERN_KEY) || 'dot';
-    let currentTheme = localStorage.getItem('editorTheme') || 'material-darker';
 
     // Initialize CodeMirror
     const editor = CodeMirror(document.querySelector('.editor-wrapper'), {
@@ -1047,14 +1055,17 @@ radar-beta
 
     // Background pattern toggle
     const applyBackground = (pattern) => {
+        const isDark = document.body.classList.contains('dark-mode');
         if (pattern === 'dot') {
-            mermaidDiagram.style.backgroundImage = 'radial-gradient(circle, #d0d0d0 1px, transparent 1px)';
+            const dotColor = isDark ? '#444' : '#d0d0d0';
+            mermaidDiagram.style.backgroundImage = `radial-gradient(circle, ${dotColor} 1px, transparent 1px)`;
             mermaidDiagram.style.backgroundSize = '20px 20px';
-            toggleBackgroundBtn.querySelector('span').textContent = 'Grid';
+            toggleBackgroundBtn.setAttribute('data-pattern', 'dot');
         } else {
-            mermaidDiagram.style.backgroundImage = 'linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 1px)';
+            const lineColor = isDark ? '#444' : '#e0e0e0';
+            mermaidDiagram.style.backgroundImage = `linear-gradient(${lineColor} 1px, transparent 1px), linear-gradient(90deg, ${lineColor} 1px, transparent 1px)`;
             mermaidDiagram.style.backgroundSize = '20px 20px';
-            toggleBackgroundBtn.querySelector('span').textContent = 'Dot';
+            toggleBackgroundBtn.setAttribute('data-pattern', 'grid');
         }
     };
 
@@ -1066,6 +1077,44 @@ radar-beta
 
     // Apply saved background pattern
     applyBackground(currentBackground);
+
+    // Dark mode toggle
+    const applyDarkMode = (isDark) => {
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+        // Update Mermaid theme
+        mermaid.initialize({ 
+            startOnLoad: false,
+            securityLevel: 'strict',
+            suppressErrors: true,
+            theme: isDark ? 'dark' : 'default',
+            flowchart: { 
+                htmlLabels: false,
+                useMaxWidth: false
+            },
+            gantt: {
+                displayMode: 'compact',
+                todayMarker: 'off'
+            }
+        });
+        // Re-render diagram with new theme
+        renderDiagram();
+        // Reapply background pattern with new colors
+        applyBackground(currentBackground);
+    };
+
+    // Initialize dark mode
+    applyDarkMode(isDarkMode);
+
+    // Dark mode toggle button
+    darkModeToggle.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        localStorage.setItem(CONFIG.DARK_MODE_KEY, isDarkMode);
+        applyDarkMode(isDarkMode);
+    });
 
     // Zoom level update function
     const updateZoomLevel = (zoom) => {

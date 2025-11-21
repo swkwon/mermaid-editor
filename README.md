@@ -30,14 +30,22 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
 - **File Operations**: Save/load Mermaid code as `.txt` or `.mmd` files
 - **Unified Export Menu**: Single export button with dropdown menu for all formats
 - **Export Options**: Download as high-quality PNG, JPG, SVG images, or PDF (auto scales to A4)
+  - **Theme-aware Export**: Exported images match current theme (dark/light background)
 - **Clipboard Copy**: Copy diagram as image directly to clipboard for easy pasting into documents (works only on HTTPS or localhost)
+  - **Theme-aware Copy**: Clipboard images preserve current theme colors
 
 ### UI & Design
+- **Dark Mode**: Toggle between light and dark themes with persistent preference
+  - Automatic Mermaid diagram theme switching (default/dark)
+  - Adaptive background patterns that match the selected theme
+  - Smooth transitions between themes
 - **Full-Screen Layout**: Edge-to-edge design that maximizes workspace
 - **Modern Interface**: Clean, gradient-based design with animated header
+- **Optimized CSS**: CSS variables for consistent theming and easy customization
 - **Responsive Layout**: Works on desktop and mobile devices
 - **Sample Library**: 23 built-in diagram examples (flowchart, sequence, gantt, etc.)
 - **Customizable Gutter**: Stylish resizable split bar with hover effects
+- **Unified Toggle Buttons**: Consistent SVG-based icons for theme and pattern controls
 
 ## 🚀 How to Use
 
@@ -45,6 +53,7 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
 2. Enter Mermaid diagram syntax in the left editor pane
 3. View the rendered diagram in real-time on the right
 4. Use toolbar buttons to:
+   - **Theme**: Toggle between light and dark mode
    - **Share**: Copy shareable URL to clipboard
    - **Save/Load**: Export or import diagram code
    - **Export**: Click to open dropdown menu and select format (PNG, JPG, SVG, or PDF)
