@@ -18,13 +18,17 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
 - **Real-time Rendering**: Diagrams update automatically as you type
 - **Split View**: Adjustable resizable panels between code and preview (layout saved automatically)
 - **Zoom & Pan**: Navigate large diagrams with mouse controls or zoom buttons
+- **Zoom Controls**: Dedicated zoom in/out/reset buttons with real-time zoom level display
+- **Keyboard Shortcuts**: 
+  - `Ctrl + +/-/0`: Zoom in/out/reset
+  - `Ctrl + i/k/j/l`: Pan diagram in all directions
 - **Background Patterns**: Toggle between dot and grid patterns for better visualization
 
 ### Save & Share
 - **Auto-Save**: Automatic local storage backup (1-hour expiration)
 - **Shareable URLs**: Generate encoded URLs to share diagrams
 - **File Operations**: Save/load Mermaid code as `.txt` or `.mmd` files
-- **Export Options**: Download as high-quality PNG or JPG images
+- **Export Options**: Download as high-quality PNG, JPG, or SVG images
 
 ### UI & Design
 - **Full-Screen Layout**: Edge-to-edge design that maximizes workspace
@@ -41,8 +45,9 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
 4. Use toolbar buttons to:
    - **Share**: Copy shareable URL to clipboard
    - **Save/Load**: Export or import diagram code
-   - **Export**: Download as PNG or JPG image
+   - **Export**: Download as PNG, JPG, or SVG image
    - **Background**: Toggle between dot/grid patterns
+   - **Zoom Controls**: Use buttons or keyboard shortcuts to zoom and pan
 
 For more syntax details, visit the [official Mermaid documentation](https://mermaid.js.org/syntax/flowchart.html).
 
