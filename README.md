@@ -30,6 +30,7 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
 - **File Operations**: Save/load Mermaid code as `.txt` or `.mmd` files
 - **Unified Export Menu**: Single export button with dropdown menu for all formats
 - **Export Options**: Download as high-quality PNG, JPG, SVG images, or PDF (auto scales to A4)
+- **Clipboard Copy**: Copy diagram as image directly to clipboard for easy pasting into documents
 
 ### UI & Design
 - **Full-Screen Layout**: Edge-to-edge design that maximizes workspace
@@ -47,6 +48,7 @@ A modern, web-based tool for creating beautiful diagrams using [Mermaid.js](http
    - **Share**: Copy shareable URL to clipboard
    - **Save/Load**: Export or import diagram code
    - **Export**: Click to open dropdown menu and select format (PNG, JPG, SVG, or PDF)
+   - **Copy**: Copy diagram image directly to clipboard (works in modern browsers with HTTPS)
    - **Background**: Toggle between dot/grid patterns
    - **Zoom Controls**: Use buttons or keyboard shortcuts to zoom and pan
 

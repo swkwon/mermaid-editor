@@ -30,7 +30,10 @@ const CONFIG = {
         URL_DECODE_FAILED: 'Failed to load code from URL.',
         ENCODE_FAILED: 'Failed to encode diagram. Please try a different diagram type.',
         PDF_SUCCESS: 'PDF downloaded successfully!',
-        PDF_FAILED: 'Failed to generate PDF.'
+        PDF_FAILED: 'Failed to generate PDF.',
+        CLIPBOARD_SUCCESS: 'Image copied to clipboard!',
+        CLIPBOARD_FAILED: 'Failed to copy image to clipboard.',
+        CLIPBOARD_NOT_SUPPORTED: 'Clipboard API is not supported in your browser.'
     }
 };
 
@@ -112,6 +115,38 @@ const prepareSvgForExport = (svgElement) => {
     }
     
     return clonedSvg;
+};
+
+const copyImageToClipboard = async (svgElement, bbox) => {
+    return new Promise((resolve, reject) => {
+        convertSvgToImage(
+            svgElement,
+            bbox,
+            'png',
+            async (dataUrl) => {
+                try {
+                    // Convert data URL to blob
+                    const response = await fetch(dataUrl);
+                    const blob = await response.blob();
+                    
+                    // Use Clipboard API to copy image
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            [blob.type]: blob
+                        })
+                    ]);
+                    
+                    resolve();
+                } catch (error) {
+                    console.error('Failed to copy image to clipboard:', error);
+                    reject(error);
+                }
+            },
+            (errorMessage) => {
+                reject(new Error(errorMessage));
+            }
+        );
+    });
 };
 
 const convertSvgToImage = (svgElement, bbox, format, onSuccess, onError) => {
@@ -303,6 +338,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const exportBtn = document.getElementById('export-btn');
     const exportMenu = document.getElementById('export-menu');
     const toggleBackgroundBtn = document.getElementById('toggle-background-btn');
+    const copyImageBtn = document.getElementById('copy-image-btn');
     const mermaidInput = document.getElementById('mermaid-input');
     const mermaidDiagram = document.getElementById('mermaid-diagram');
     const toast = document.getElementById('toast-notification');
@@ -973,6 +1009,39 @@ radar-beta
                 console.error('PDF export error:', err);
                 showToast(CONFIG.MESSAGES.PDF_FAILED);
             }
+        }
+    });
+
+    // Copy image to clipboard
+    copyImageBtn.addEventListener('click', async () => {
+        const svgElement = mermaidDiagram.querySelector('svg');
+        if (!svgElement) {
+            showToast(CONFIG.MESSAGES.NO_DIAGRAM);
+            return;
+        }
+
+        // Check if Clipboard API is supported
+        if (!navigator.clipboard || !navigator.clipboard.write) {
+            showToast(CONFIG.MESSAGES.CLIPBOARD_NOT_SUPPORTED);
+            return;
+        }
+
+        const bbox = getSvgDimensions(svgElement);
+        const { width, height } = bbox;
+
+        // Check if dimensions exceed browser limits
+        if (width > CONFIG.MAX_DIMENSION || height > CONFIG.MAX_DIMENSION) {
+            console.warn('Diagram dimensions exceed maximum allowed size:', { width, height });
+            showToast(CONFIG.MESSAGES.DIAGRAM_TOO_LARGE);
+            return;
+        }
+
+        try {
+            await copyImageToClipboard(svgElement, bbox);
+            showToast(CONFIG.MESSAGES.CLIPBOARD_SUCCESS);
+        } catch (error) {
+            console.error('Clipboard copy error:', error);
+            showToast(CONFIG.MESSAGES.CLIPBOARD_FAILED);
         }
     });
 
