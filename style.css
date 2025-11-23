@@ -907,19 +907,19 @@ body.dark-mode .export-item:hover {
 }
 
 .export-item[data-format="png"]::before {
-    content: "ğŸ“„";
+    content: "?“„";
 }
 
 .export-item[data-format="jpg"]::before {
-    content: "ğŸ–¼ï¸";
+    content: "?–¼ï¸?;
 }
 
 .export-item[data-format="svg"]::before {
-    content: "ğŸ”§";
+    content: "?”§";
 }
 
 .export-item[data-format="pdf"]::before {
-    content: "ğŸ“‘";
+    content: "?“‘";
 }
 
 .btn {
@@ -1019,16 +1019,6 @@ body.dark-mode .export-item:hover {
     }
 }
 
-@media (max-width: 480px) {
-    .btn span {
-        display: none;
-    }
-
-    .btn {
-        padding: 10px;
-    }
-}
-
 #mermaid-diagram {
     text-align: center;
 }
@@ -1087,13 +1077,13 @@ body.dark-mode .export-item:hover {
     border-bottom: none;
 }
 
-/* Mermaid ì—ëŸ¬ ìš”ì†Œ ìˆ¨ê¹€ */
+/* Mermaid ?ëŸ¬ ?”ì†Œ ?¨ê? */
 .error-icon,
 .error-text {
     display: none !important;
 }
 
-/* CodeMirror ì—ëŸ¬ ë¼ì¸ í‘œì‹œ */
+/* CodeMirror ?ëŸ¬ ?¼ì¸ ?œì‹œ */
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
@@ -1214,16 +1204,6 @@ body.dark-mode .export-item:hover {
     }
 }
 
-@media (max-width: 480px) {
-    .btn span {
-        display: none;
-    }
-
-    .btn {
-        padding: 10px;
-    }
-}
-
 #mermaid-diagram {
     text-align: center;
 }
@@ -1282,13 +1262,13 @@ body.dark-mode .export-item:hover {
     border-bottom: none;
 }
 
-/* Mermaid ì—ëŸ¬ ìš”ì†Œ ìˆ¨ê¹€ */
+/* Mermaid ?ëŸ¬ ?”ì†Œ ?¨ê? */
 .error-icon,
 .error-text {
     display: none !important;
 }
 
-/* CodeMirror ì—ëŸ¬ ë¼ì¸ í‘œì‹œ */
+/* CodeMirror ?ëŸ¬ ?¼ì¸ ?œì‹œ */
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
@@ -1528,15 +1508,5 @@ body.dark-mode .export-item:hover {
     .btn {
         flex: 1;
         justify-content: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .btn span {
-        display: none;
-    }
-
-    .btn {
-        padding: 10px;
     }
 }
