@@ -45,7 +45,7 @@ body {
     background: var(--bg-light);
     background-attachment: fixed;
     color: var(--text-primary-light);
-    padding-bottom: 20px;
+    padding-bottom: 0;
     transition: background var(--transition-base), color var(--transition-base);
 }
 
@@ -1109,13 +1109,13 @@ body.dark-mode .export-item:hover {
     border-bottom: none;
 }
 
-/* Mermaid ???ル∥??????ル∥??????ル∥吏?? */
+/* Mermaid ???????????????????????????뷂┼?? */
 .error-icon,
 .error-text {
     display: none !important;
 }
 
-/* CodeMirror ???ル∥??????ル∥??????ル∥???*/
+/* CodeMirror ??????????????????????????????*/
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
@@ -1172,7 +1172,7 @@ body.dark-mode .export-item:hover {
     line-height: 1;
 }
 
-/* CodeMirror ???ル∥??????ル∥??????ル∥???*/
+/* CodeMirror ??????????????????????????????*/
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
@@ -1288,9 +1288,9 @@ body.dark-mode .export-item:hover {
     }
 
     .split-container {
-        height: calc(100vh - 200px);
+        height: calc(100vh - 140px);
 
-        /* Adjust for taller header on mobile */
+        /* Adjust for minimized header on mobile */
         flex-direction: column;
     }
 
@@ -1324,30 +1324,53 @@ body.dark-mode .export-item:hover {
     }
 
     /* Adjust Header for Mobile */
-    .header-content {
+    .app-header {
         padding: 10px;
-        gap: 10px;
+    }
+
+    .header-content {
+        padding: 5px;
+        gap: 8px;
+    }
+
+    /* Minimize logo on mobile */
+    .logo {
+        gap: 8px;
+    }
+
+    .logo svg {
+        display: none;
+    }
+
+    .title-group h1 {
+        font-size: 16px;
+    }
+
+    .title-group .subtitle {
+        display: none;
     }
 
     .header-actions {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
     }
 
     .header-actions>button,
     .header-actions>a {
-        flex: 1;
-        justify-content: center;
-        padding: 10px;
-        font-size: 13px;
+        padding: 8px;
+        font-size: 12px;
+        min-width: auto;
     }
 
-    .btn-text {
+    /* Hide button text on mobile, show only icons */
+    .header-actions>button span:not(.sun-icon):not(.moon-icon):not(.code-icon):not(.preview-icon),
+    .header-actions>a span {
         display: none;
+    }
 
-        /* Hide text on very small screens if needed, or keep it */
+    .sponsor-link svg,
+    .help-link svg,
+    .github-link svg {
+        margin: 0;
     }
 
     /* Ensure buttons are still clickable */
