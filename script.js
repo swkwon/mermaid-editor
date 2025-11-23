@@ -1293,6 +1293,55 @@ radar-beta
 
     await renderDiagram();
 
+    // Handle window resize for responsive layout
+    let resizeTimeout;
+    let wasMobile = window.matchMedia('(max-width: 768px)').matches;
+    
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            const isDiagramVisible = splitContainer.classList.contains('show-diagram');
+            
+            // If transitioning from mobile to desktop or vice versa
+            if (wasMobile !== isMobile) {
+                wasMobile = isMobile;
+                
+                if (!isMobile) {
+                    // Transitioning to desktop - reset mobile view classes
+                    splitContainer.classList.remove('show-code', 'show-diagram');
+                    // Re-render diagram to ensure it displays correctly
+                    renderDiagram().then(() => {
+                        if (panZoomInstance) {
+                            panZoomInstance.resize();
+                            panZoomInstance.fit();
+                            panZoomInstance.center();
+                        }
+                    });
+                } else {
+                    // Transitioning to mobile - ensure code view is shown by default
+                    if (!isDiagramVisible && !splitContainer.classList.contains('show-code')) {
+                        splitContainer.classList.add('show-code');
+                    }
+                }
+            } else if (isMobile && isDiagramVisible) {
+                // Still in mobile view with diagram visible - re-render on resize
+                renderDiagram().then(() => {
+                    if (panZoomInstance) {
+                        panZoomInstance.resize();
+                        panZoomInstance.fit();
+                        panZoomInstance.center();
+                    }
+                });
+            } else if (panZoomInstance && !isMobile) {
+                // Desktop view - just resize the pan-zoom instance
+                panZoomInstance.resize();
+                panZoomInstance.fit();
+                panZoomInstance.center();
+            }
+        }, 300);
+    });
+
     // Sponsor modal handlers
     sponsorBtn.addEventListener('click', () => {
         sponsorModal.classList.add('show');
