@@ -918,20 +918,40 @@ body.dark-mode .export-item:hover {
     color: #fff;
 }
 
+/* File type icons using inline SVG */
+.export-item::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    flex-shrink: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* PNG - Image icon */
 .export-item[data-format="png"]::before {
-    content: "?��";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>');
 }
 
+/* JPG - Camera icon */
 .export-item[data-format="jpg"]::before {
-    content: "?���?;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f5576c"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/><circle cx="12" cy="12" r="3.2" fill="%23f5576c"/></svg>');
 }
 
+/* SVG - Vector icon */
 .export-item[data-format="svg"]::before {
-    content: "?��";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234facfe"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/><path d="M8 15.5l1.5 1.5 2-2 2.5 2.5 3-3" stroke="%234facfe" stroke-width="1.5" fill="none"/></svg>');
 }
 
+/* PDF - Document icon */
 .export-item[data-format="pdf"]::before {
-    content: "?��";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23fa709a"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/><text x="12" y="16" font-size="8" fill="%23fa709a" text-anchor="middle" font-weight="bold">PDF</text></svg>');
+}
+
+.export-item:hover::before {
+    opacity: 0.9;
 }
 
 .btn {
@@ -1089,13 +1109,13 @@ body.dark-mode .export-item:hover {
     border-bottom: none;
 }
 
-/* Mermaid ?�러 ?�소 ?��? */
+/* Mermaid ???ル∥??????ル∥??????ル∥吏?? */
 .error-icon,
 .error-text {
     display: none !important;
 }
 
-/* CodeMirror ?�러 ?�인 ?�시 */
+/* CodeMirror ???ル∥??????ル∥??????ル∥???*/
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
@@ -1152,7 +1172,7 @@ body.dark-mode .export-item:hover {
     line-height: 1;
 }
 
-/* CodeMirror ?�러 ?�인 ?�시 */
+/* CodeMirror ???ル∥??????ル∥??????ル∥???*/
 .CodeMirror .error-line {
     background-color: rgba(255, 0, 0, 0.1);
     border-bottom: 2px dotted #ff0000;
