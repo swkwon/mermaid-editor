@@ -1265,6 +1265,10 @@ body.dark-mode .export-item:hover {
     .logo svg {
         display: none;
     }
+    
+    .zoom-level {
+        display: none;
+    }
 
     .title-group h1 {
         font-size: 16px;
