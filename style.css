@@ -1151,66 +1151,10 @@ body.dark-mode .export-item:hover {
 }
 
 .code-preview pre {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.btn svg {
-    flex-shrink: 0;
-}
-
-.btn span {
-    line-height: 1;
-}
-
-/* CodeMirror Error Styling (Duplicate - Consider removing) */
-.CodeMirror .error-line {
-    background-color: rgba(255, 0, 0, 0.1);
-    border-bottom: 2px dotted #ff0000;
-}
-
-.help-section h2 {
-    margin-top: 0;
-    color: #333;
-}
-
-.example-block {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-@media (min-width: 768px) {
-    .example-block {
-        flex-direction: row;
-    }
-}
-
-.code-preview {
-    flex: 1;
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-right: 1px solid #ddd;
-    overflow-x: auto;
-}
-
-.code-preview pre {
     margin: 0;
     font-family: monospace;
     white-space: pre-wrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .example-block .mermaid {
