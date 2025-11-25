@@ -2,6 +2,7 @@ import { CONFIG, getMermaidHints } from './config.js';
 import { debounce } from './utils.js';
 import { initializeMermaid, renderDiagram, applyDarkMode } from './diagram.js';
 import { FirebaseManager } from './firebase-manager.js';
+import { showToast } from './utils.js';
 import {
     setupUrlCodeLoading,
     setupCopyUrlButton,
@@ -151,10 +152,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Auth UI Elements
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarMenu = document.getElementById('avatar-menu');
+    const avatarInitialsImg = document.getElementById('avatar-initials-img');
+    const avatarInitials = document.getElementById('avatar-initials');
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    const userProfile = document.getElementById('user-profile');
+    const loggedInView = document.getElementById('logged-in-view');
+    const loggedOutView = document.getElementById('logged-out-view');
+    // const userProfile = document.getElementById('user-profile');
     const userAvatar = document.getElementById('user-avatar');
+    const userAvatarName = document.getElementById('user-avatar-name');
     const userName = document.getElementById('user-name');
     const loginModal = document.getElementById('login-modal');
     const closeLoginModalBtn = document.getElementById('close-login-modal');
@@ -173,18 +181,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     const closeLoadModalBtn = document.getElementById('close-load-modal');
     const diagramList = document.getElementById('diagram-list');
 
+    // Toggle menu
+    avatarBtn.addEventListener('click', () => {
+        const isOpen = avatarMenu.classList.contains('show');
+        avatarMenu.classList.toggle('show');
+        avatarBtn.setAttribute('aria-expanded', !isOpen);
+        avatarMenu.setAttribute('aria-hidden', isOpen);
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!avatarBtn.contains(e.target) && !avatarMenu.contains(e.target)) {
+            avatarMenu.classList.remove('show');
+            avatarBtn.setAttribute('aria-expanded', 'false');
+            avatarMenu.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    // Close menu on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && avatarMenu.classList.contains('show')) {
+            avatarMenu.classList.remove('show');
+            avatarBtn.setAttribute('aria-expanded', 'false');
+            avatarMenu.setAttribute('aria-hidden', 'true');
+        }
+    });
+
     // Auth Functions
     function updateAuthUI(user) {
         if (user) {
             loginBtn.style.display = 'none';
-            userProfile.style.display = 'flex';
-            userAvatar.src = user.photoURL || 'https://via.placeholder.com/32';
+            // userProfile.style.display = 'flex';
             userName.textContent = user.displayName || user.email;
             cloudBtns.style.display = '';
+            avatarBtn.classList.add('logged-in');
+            if (user.photoURL) {
+                userAvatar.src = user.photoURL;
+                userAvatarName.style.display = 'none';
+                avatarInitialsImg.style.display = '';
+                avatarInitialsImg.style.width = '32px';
+                avatarInitialsImg.style.height = '32px';
+                avatarInitialsImg.src = user.photoURL;
+                avatarInitials.style.display = 'none';
+            } else {
+                userAvatar.style.display = 'none';
+                userAvatarName.textContent = user.displayName;
+                avatarInitialsImg.style.display = 'none';
+                avatarInitialsImg.src = '';
+                avatarInitials.style.display = '';
+                avatarInitials.textContent = user.displayName;
+            }
+            loggedInView.style.display = 'block';
+            loggedOutView.style.display = 'none';
         } else {
             loginBtn.style.display = 'inline-flex';
-            userProfile.style.display = 'none';
+            // userProfile.style.display = 'none';
             cloudBtns.style.display = 'none';
+            avatarBtn.classList.remove('logged-in');
+            avatarInitialsImg.style.display = 'none';
+            avatarInitialsImg.src = '';
+            avatarInitials.style.display = '';
+            loggedInView.style.display = 'none';
+            loggedOutView.style.display = 'block';
         }
     }
 
@@ -218,6 +276,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             await firebaseManager.logout();
             showToast('Logged out successfully!');
+            avatarMenu.classList.remove('show');
+            avatarMenu.setAttribute('aria-hidden', 'true');
         } catch (error) {
             showToast('Logout failed: ' + error.message, true);
         }
@@ -302,34 +362,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             diagramList.innerHTML = `<div class="loading-spinner" style="color: red;">Error: ${error.message}</div>`;
         }
-    }
-
-    // Helper for toast notifications (simple implementation)
-    function showToast(message, isError = false) {
-        const toast = document.getElementById('toast-notification');
-        if (!toast) return; // Ensure toast element exists in HTML if not already
-
-        // Create toast if it doesn't exist or use existing logic
-        // For now, let's assume a simple toast div exists or we create one
-        toast.textContent = message;
-        toast.style.backgroundColor = isError ? '#dc3545' : '#28a745';
-        toast.style.color = 'white';
-        toast.style.padding = '10px 20px';
-        toast.style.borderRadius = '4px';
-        toast.style.position = 'fixed';
-        toast.style.bottom = '20px';
-        toast.style.right = '20px';
-        toast.style.zIndex = '2000';
-        toast.style.display = 'block';
-        toast.style.opacity = '1';
-        toast.style.transition = 'opacity 0.3s';
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 300);
-        }, 3000);
     }
 
     function escapeHtml(text) {
