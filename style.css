@@ -1338,21 +1338,16 @@ body.dark-mode .export-item:hover {
     background: var(--bg-container-light);
     border: 1px solid var(--border-light);
     border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 
-                0 2px 8px rgba(0, 0, 0, 0.1);
     font-family: inherit;
     font-size: 13px;
     max-height: 300px;
     overflow-y: auto;
     min-width: 200px;
-    backdrop-filter: blur(10px);
 }
 
 body.dark-mode .CodeMirror-hints {
     background: var(--bg-container-dark);
     border-color: var(--border-dark);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-                0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .CodeMirror-hint {
@@ -1360,7 +1355,6 @@ body.dark-mode .CodeMirror-hints {
     padding: 8px 12px;
     cursor: pointer;
     color: var(--text-primary-light);
-    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1396,7 +1390,6 @@ body.dark-mode .CodeMirror-hint:hover {
     color: #fff !important;
     border-left-color: #fff;
     font-weight: 500;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 /* Scrollbar styling */
@@ -1423,20 +1416,4 @@ body.dark-mode .CodeMirror-hints::-webkit-scrollbar-thumb {
 
 body.dark-mode .CodeMirror-hints::-webkit-scrollbar-thumb:hover {
     background: rgba(102, 126, 234, 0.6);
-}
-
-/* Animation */
-@keyframes hintFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.CodeMirror-hints {
-    animation: hintFadeIn 0.15s ease-out;
 }

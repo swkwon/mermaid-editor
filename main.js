@@ -80,18 +80,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Auto-trigger autocomplete while typing
         if (change.origin === '+input') {
+            // Skip if autocomplete is already showing
+            if (cm.state.completionActive) {
+                return;
+            }
+
             const cursor = cm.getCursor();
             const line = cm.getLine(cursor.line);
             const char = line.charAt(cursor.ch - 1);
             
             // Don't show hints for space, newline, or special punctuation
             if (char && char.match(/[a-zA-Z0-9\-<>*.=|]/)) {
-                setTimeout(() => {
-                    cm.showHint({
-                        hint: getMermaidHints,
-                        completeSingle: false
-                    });
-                }, 100);
+                cm.showHint({
+                    hint: getMermaidHints,
+                    completeSingle: false
+                });
             }
         }
     });
