@@ -63,6 +63,8 @@ body.dark-mode {
     border-image: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
     border-image-slice: 1;
     transition: background var(--transition-base);
+    z-index: 100;
+    position: relative;
 }
 
 body.dark-mode .app-header {
@@ -1437,14 +1439,10 @@ body.dark-mode .CodeMirror-hints::-webkit-scrollbar-thumb:hover {
     --border-dark: #404040;
 }
 
-
-
-
-
 /* Avatar Container */
-/* .avatar-container {
+.avatar-container {
     position: relative;
-} */
+}
 
 .avatar-button {
     width: 40px;
