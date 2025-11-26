@@ -81,9 +81,41 @@ export const getSvgDimensions = (svgElement) => {
     const restore = ensureDiagramVisible();
     
     try {
+        // First try to get dimensions from viewBox
+        const viewBox = svgElement.getAttribute('viewBox');
+        if (viewBox) {
+            const parts = viewBox.split(/[\s,]+/).map(Number);
+            if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+                return { x: parts[0], y: parts[1], width: parts[2], height: parts[3] };
+            }
+        }
+        
+        // Try getBBox from viewport or SVG element
         const viewport = svgElement.querySelector('.svg-pan-zoom_viewport');
-        return viewport ? viewport.getBBox() :
-            (svgElement.viewBox?.baseVal?.width > 0 ? svgElement.viewBox.baseVal : svgElement.getBBox());
+        if (viewport) {
+            try {
+                const bbox = viewport.getBBox();
+                if (bbox.width > 0 && bbox.height > 0) {
+                    return bbox;
+                }
+            } catch (e) { /* ignore */ }
+        }
+        
+        // Try viewBox baseVal
+        if (svgElement.viewBox?.baseVal?.width > 0) {
+            return svgElement.viewBox.baseVal;
+        }
+        
+        // Last resort: getBBox on SVG element
+        try {
+            const bbox = svgElement.getBBox();
+            if (bbox.width > 0 && bbox.height > 0) {
+                return bbox;
+            }
+        } catch (e) { /* ignore */ }
+        
+        // Default fallback
+        return { x: 0, y: 0, width: 800, height: 600 };
     } finally {
         restore();
     }
