@@ -91,6 +91,51 @@ export const updateZoomLevel = (zoom) => {
 export const renderDiagram = async (editor) => {
     const mermaidDiagram = document.getElementById('mermaid-diagram');
     const mermaidTemp = document.getElementById('mermaid-temp');
+    const diagramPane = document.getElementById('diagram-pane');
+
+    // Helper to ensure an element is visible for rendering (offscreen but renderable)
+    const ensureElementVisible = (element) => {
+        if (!element) return () => {};
+        
+        const computedStyle = window.getComputedStyle(element);
+        const isHidden = computedStyle.display === 'none' || 
+                         computedStyle.visibility === 'hidden' ||
+                         element.offsetWidth === 0;
+        
+        if (!isHidden) return () => {};
+        
+        // Save original inline styles
+        const originalStyle = element.getAttribute('style') || '';
+        
+        // Force visibility - use opacity:0 instead of visibility:hidden
+        // visibility:hidden still prevents proper size calculation in some browsers
+        element.setAttribute('style', `
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            opacity: 0 !important;
+            width: 800px !important;
+            height: 600px !important;
+            display: block !important;
+            pointer-events: none !important;
+            z-index: -9999 !important;
+        `);
+        
+        // Force reflow
+        void element.offsetHeight;
+        
+        return () => {
+            if (originalStyle) {
+                element.setAttribute('style', originalStyle);
+            } else {
+                element.removeAttribute('style');
+            }
+        };
+    };
+
+    // Restore functions - declared outside try so they can be called in catch
+    let restoreDiagramPane = () => {};
+    let restoreMermaidTemp = () => {};
 
     try {
         const mermaidCode = editor.getValue().trim();
@@ -110,6 +155,10 @@ export const renderDiagram = async (editor) => {
         if (!parseResult) {
             return;
         }
+
+        // Ensure both diagram pane and temp container are visible for proper rendering
+        restoreDiagramPane = ensureElementVisible(diagramPane);
+        restoreMermaidTemp = ensureElementVisible(mermaidTemp);
 
         const uniqueId = 'graphDiv-' + Date.now();
 
@@ -165,6 +214,10 @@ export const renderDiagram = async (editor) => {
             // Initial zoom level display
             updateZoomLevel(panZoomInstance.getZoom());
         }
+
+        // Restore original visibility AFTER svg-pan-zoom initialization
+        restoreDiagramPane();
+        restoreMermaidTemp();
     } catch (e) {
         // Keep existing diagram on error
         mermaidTemp.innerHTML = '';
@@ -230,6 +283,10 @@ export const renderDiagram = async (editor) => {
                 editor.scrollIntoView({ line: errorLine, ch: 0 }, 100);
             }
         }
+
+        // Restore visibility on error as well
+        restoreDiagramPane();
+        restoreMermaidTemp();
     }
 };
 

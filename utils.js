@@ -33,13 +33,60 @@ export const collectCssStyles = () => {
 };
 
 /**
+ * Temporarily make diagram pane visible for accurate measurements
+ * Returns a restore function
+ */
+export const ensureDiagramVisible = () => {
+    const diagramPane = document.getElementById('diagram-pane');
+    if (!diagramPane) return () => {};
+    
+    const computedStyle = window.getComputedStyle(diagramPane);
+    const isHidden = computedStyle.display === 'none' || 
+                     computedStyle.visibility === 'hidden' ||
+                     diagramPane.offsetWidth === 0;
+    
+    if (!isHidden) return () => {};
+    
+    const originalStyle = diagramPane.getAttribute('style') || '';
+    
+    diagramPane.setAttribute('style', `
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        opacity: 0 !important;
+        width: 800px !important;
+        height: 600px !important;
+        display: block !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
+    `);
+    
+    void diagramPane.offsetHeight;
+    
+    return () => {
+        if (originalStyle) {
+            diagramPane.setAttribute('style', originalStyle);
+        } else {
+            diagramPane.removeAttribute('style');
+        }
+    };
+};
+
+/**
  * Get the dimensions of an SVG element
  * Accounts for svg-pan-zoom viewport if present
+ * Temporarily shows diagram pane if hidden for accurate measurements
  */
 export const getSvgDimensions = (svgElement) => {
-    const viewport = svgElement.querySelector('.svg-pan-zoom_viewport');
-    return viewport ? viewport.getBBox() :
-        (svgElement.viewBox?.baseVal?.width > 0 ? svgElement.viewBox.baseVal : svgElement.getBBox());
+    const restore = ensureDiagramVisible();
+    
+    try {
+        const viewport = svgElement.querySelector('.svg-pan-zoom_viewport');
+        return viewport ? viewport.getBBox() :
+            (svgElement.viewBox?.baseVal?.width > 0 ? svgElement.viewBox.baseVal : svgElement.getBBox());
+    } finally {
+        restore();
+    }
 };
 
 /**
