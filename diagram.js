@@ -1,5 +1,4 @@
 import { CONFIG } from './config.js';
-import { getSvgDimensions } from './utils.js';
 
 let panZoomInstance = null;
 
@@ -175,20 +174,6 @@ export const renderDiagram = async (editor) => {
         // Initialize SVG Pan Zoom
         const svgElement = mermaidDiagram.querySelector('svg');
         if (svgElement) {
-            // Log original SVG size
-            const viewport = svgElement.querySelector('.svg-pan-zoom_viewport') || svgElement;
-            const bbox = viewport.getBBox();
-            console.log('=== Rendered Diagram Info ===');
-            console.log('Original SVG size:', {
-                width: bbox.width,
-                height: bbox.height,
-                x: bbox.x,
-                y: bbox.y,
-                aspectRatio: (bbox.width / bbox.height).toFixed(2)
-            });
-            console.log('SVG viewBox:', svgElement.getAttribute('viewBox'));
-            console.log('============================');
-
             // Destroy existing pan-zoom instance
             if (panZoomInstance) {
                 try { panZoomInstance.destroy(); } catch (e) { }

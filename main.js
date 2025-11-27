@@ -1,8 +1,7 @@
 import { CONFIG, getMermaidHints } from './config.js';
-import { debounce, ensureDiagramVisible } from './utils.js';
+import { debounce, ensureDiagramVisible, showToast } from './utils.js';
 import { initializeMermaid, renderDiagram, applyDarkMode } from './diagram.js';
 import { FirebaseManager } from './firebase-manager.js';
-import { showToast } from './utils.js';
 import {
     setupUrlCodeLoading,
     setupCopyUrlButton,
@@ -160,7 +159,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.getElementById('logout-btn');
     const loggedInView = document.getElementById('logged-in-view');
     const loggedOutView = document.getElementById('logged-out-view');
-    // const userProfile = document.getElementById('user-profile');
     const userAvatar = document.getElementById('user-avatar');
     const userAvatarName = document.getElementById('user-avatar-name');
     const userName = document.getElementById('user-name');
@@ -211,7 +209,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     function updateAuthUI(user) {
         if (user) {
             loginBtn.style.display = 'none';
-            // userProfile.style.display = 'flex';
             userName.textContent = user.displayName || user.email;
             cloudBtns.style.display = '';
             avatarBtn.classList.add('logged-in');
@@ -235,7 +232,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             loggedOutView.style.display = 'none';
         } else {
             loginBtn.style.display = 'inline-flex';
-            // userProfile.style.display = 'none';
             cloudBtns.style.display = 'none';
             avatarBtn.classList.remove('logged-in');
             avatarInitialsImg.style.display = 'none';
@@ -543,17 +539,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const svgElement = diagramContainer.querySelector('svg');
         
         if (!svgElement) {
-            console.log('createThumbnail: No SVG element found');
             return null;
         }
 
-        // Ensure diagram pane is visible for accurate getBBox()
-        const diagramPane = document.getElementById('diagram-pane');
-        console.log('createThumbnail: Before restore - diagramPane display:', window.getComputedStyle(diagramPane).display);
-        
         const restore = ensureDiagramVisible();
-        
-        console.log('createThumbnail: After ensureDiagramVisible - diagramPane display:', window.getComputedStyle(diagramPane).display);
 
         try {
             // Clone SVG to avoid modifying the original
@@ -561,15 +550,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Try to get dimensions from viewBox first, then getBBox
             let viewBox = svgElement.getAttribute('viewBox');
-            console.log('createThumbnail: Original viewBox:', viewBox);
-            
             let x = 0, y = 0, width = 0, height = 0;
             
             if (viewBox) {
                 const parts = viewBox.split(/[\s,]+/).map(Number);
                 if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
                     [x, y, width, height] = parts;
-                    console.log('createThumbnail: Using viewBox dimensions:', { x, y, width, height });
                 }
             }
             
@@ -577,26 +563,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (width === 0 || height === 0) {
                 try {
                     const bbox = svgElement.getBBox();
-                    console.log('createThumbnail: getBBox result:', bbox);
                     x = bbox.x;
                     y = bbox.y;
                     width = bbox.width;
                     height = bbox.height;
                 } catch (e) {
-                    console.error('createThumbnail: getBBox failed:', e);
+                    // getBBox failed, will use defaults
                 }
             }
             
             // If still no dimensions, use default
             if (width === 0 || height === 0) {
-                console.warn('createThumbnail: Could not get SVG dimensions, using defaults');
                 width = 800;
                 height = 600;
                 x = 0;
                 y = 0;
             }
-            
-            console.log('createThumbnail: Final dimensions:', { x, y, width, height });
             
             clonedSvg.setAttribute('viewBox', `${x - 10} ${y - 10} ${width + 20} ${height + 20}`);
             clonedSvg.setAttribute('width', '600');
